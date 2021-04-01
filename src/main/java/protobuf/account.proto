@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package org.apache.flink.statefun.examples.kafka;
+option java_package = "com.iquantex.flink.account.protobuf";
+option java_multiple_files = true;
+
+message AccountRequest {
+  string accountCode = 1;
+  int32 amt = 2;
+}
+
+message AccountResponse {
+  string retMsg = 1;
+}
