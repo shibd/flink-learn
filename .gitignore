@@ -34,4 +34,4 @@ out
 gen
 
 ./checkpoint-dir
-./var
+flink-stateful-demo/var
