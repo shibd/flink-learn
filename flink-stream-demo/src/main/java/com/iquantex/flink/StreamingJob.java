@@ -1,22 +1,4 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.xlin;
+package com.iquantex.flink;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,37 +25,34 @@ import org.apache.flink.streaming.connectors.kafka.internals.KafkaTopicPartition
 import org.apache.flink.util.Collector;
 import scala.Int;
 
-/**
- * Skeleton for a Flink Streaming Job.
- *
- * <p>For a tutorial how to write a Flink streaming application, check the
- * tutorials and examples on the <a href="http://flink.apache.org/docs/stable/">Flink Website</a>.
- *
- * <p>To package your application into a JAR file for execution, run
- * 'mvn clean package' on the command line.
- *
- * <p>If you change the name of the main class (with the public static void main(String[] args))
- * method, change the respective entry in the POM.xml file (simply search for 'mainClass').
- */
 public class StreamingJob {
 
 	public static void main(String[] args) throws Exception {
+		// 创建流处理环境
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-//		env.setStateBackend(new MemoryStateBackend());
-//		env.enableCheckpointing(50000);
+
+		// 设置快照持久化方式，这里使用内存持久化
+		env.setStateBackend(new MemoryStateBackend());
+		// 设置触发checkpoint时间间隔为500ms一次
+		env.enableCheckpointing(500);
+		// 设置并行度
 		env.setParallelism(10);
 
+		// 设置任务异常后，flink的重启策略，这里设置为只尝试重启一次，每次间隔10s尝试重启一次
 		env.setRestartStrategy(RestartStrategies.fixedDelayRestart(1, Time.seconds(10)));
+		// 设置kafka的ip port
 		Properties props = new Properties();
 		props.setProperty("bootstrap.servers", "10.116.18.51:9092");
 		props.setProperty("group.id", "flink-group");
 
-		//数据源配置，是一个kafka消息的消费者
+		// 数据源配置，是一个kafka消息的消费者
 		FlinkKafkaConsumer011<String> consumer =
 				new FlinkKafkaConsumer011<>("topic001", new SimpleStringSchema(), props);
 
+		// 设置kafka每次从最新位置消费
 		consumer.setStartFromLatest();
 		env.addSource(consumer)
+				// 设置
 				.flatMap(new MyFunction())
 				.keyBy(0)
 				.sum(1)
@@ -87,22 +66,25 @@ public class StreamingJob {
 
 		@Override
 		public void flatMap(String s, Collector<Tuple2<String, Integer>> collector) throws Exception {
+			// 当消费的消息为'error'，则抛异常。为了测试flink重启策略
 			if (s.equals("error")) {
 				throw new Exception();
 			}
+			// 记录算子消费了多少数据
 			total++;
 			collector.collect(Tuple2.of(s, 1));
 		}
 
 		@Override
 		public List<Integer> snapshotState(long l, long l1) throws Exception {
+			// 触发checkpoint时，会调用这个方法
 			System.out.println("snapshotState...");
 			return Collections.singletonList(total);
 		}
 
-		// 发生故障时
 		@Override
 		public void restoreState(List<Integer> list) throws Exception {
+			// flink恢复数据时，会调用这个方法
 			StringBuilder s = new StringBuilder();
 			for (int i = 0; i < list.size(); i++) {
 				s.append("idx:<").append(i).append(">  val:<").append(list.get(0)).append(">");
