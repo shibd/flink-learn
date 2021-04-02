@@ -1,4 +1,4 @@
-> 该工程提供两个model,一个是从官方工程中提取出来的greet demo,另一个是模仿greet创建的一个account demo
+> 该工程提供两个model,一个是从官方工程中提取出来的greet demo,另一个是模仿greet创建的一个account demo,实现了基础的划拨操作
 
 # 工程结构
 
@@ -27,8 +27,7 @@ docker-compose build
 docker-compose up
 ```
 
-Then, to see the example in actions, send some messages to the topic `names`, and see what comes out
-out of the topic `greetings`:
+系统入口为`names` topic,出口为`greetings`topic:
 
 ```
 docker-compose exec kafka-broker kafka-console-producer.sh \
