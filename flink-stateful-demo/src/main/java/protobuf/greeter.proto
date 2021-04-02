@@ -18,7 +18,7 @@
 syntax = "proto3";
 
 package org.apache.flink.statefun.examples.kafka;
-option java_package = "com.iquantex.flink.generated";
+option java_package = "com.iquantex.flink.greet.generated";
 option java_multiple_files = true;
 
 message GreetRequest {

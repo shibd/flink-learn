@@ -1,13 +1,26 @@
-# The Greeter Example
+> 该工程提供两个model,一个是从官方工程中提取出来的greet demo,另一个是模仿greet创建的一个account demo
 
-This is a simple example that runs a simple stateful function that accepts requests from a Kafka ingress,
-and then responds by sending greeting responses to a Kafka egress. It demonstrates the primitive building blocks
-of a Stateful Functions applications, such as ingresses, routing messages to functions, handling state in functions,
-and sending messages to egresses.
+# 工程结构
 
-## Running the example
+```shell
+account
+|-- AccountIO.java                  // 定义account的输入输出,序列化和反序列化
+|-- AccountModule.java              // account程序入口,组合io,router,Function等配置
+|-- AccountRouter.java              // 存放路由信息
+|-- AccountStatefulFunction.java    // 这里存放account的处理逻辑
+`-- protobuf                        // message类
+    |-- Account.java
+    |-- AccountRequest.java
+    |-- AccountRequestOrBuilder.java
+    |-- AccountResponse.java
+    `-- AccountResponseOrBuilder.java
 
-To run the example:
+resources/MATA-INF.services/org.apache.flink.statefun.sdk.spi.StatefulFunctionModule        // 定义程序入口
+```
+
+## 运行实例
+
+构建工程
 
 ```
 docker-compose build

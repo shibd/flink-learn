@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iquantex.flink;
+package com.iquantex.flink.greet;
 
 import com.google.auto.service.AutoService;
 import org.apache.flink.statefun.sdk.spi.StatefulFunctionModule;

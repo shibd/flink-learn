@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iquantex.flink;
+package com.iquantex.flink.greet;
 
-import com.iquantex.flink.generated.GreetRequest;
-import com.iquantex.flink.generated.GreetResponse;
+import com.iquantex.flink.greet.generated.GreetRequest;
+import com.iquantex.flink.greet.generated.GreetResponse;
 import org.apache.flink.statefun.sdk.io.EgressIdentifier;
 import org.apache.flink.statefun.sdk.io.EgressSpec;
 import org.apache.flink.statefun.sdk.io.IngressIdentifier;

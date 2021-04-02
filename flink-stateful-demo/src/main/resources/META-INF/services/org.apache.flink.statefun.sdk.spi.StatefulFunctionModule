@@ -13,5 +13,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#com.iquantex.flink.GreetingModule
+#com.iquantex.flink.greet.GreetingModule
 com.iquantex.flink.account.AccountModule
