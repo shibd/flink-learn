@@ -35,3 +35,4 @@ gen
 
 ./checkpoint-dir
 flink-stateful-demo/var
+target
